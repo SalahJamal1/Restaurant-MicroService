@@ -1,0 +1,80 @@
+name: CI/CD Pipeline
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        services:
+            mysql:
+                image: mysql:8
+                env:
+                    MYSQL_ROOT_PASSWORD: root
+                    MYSQL_DATABASE: 2025
+                ports:
+                    - 3306:3306
+                options: >-
+                    --health-cmd="mysqladmin ping -h localhost"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=3
+
+        steps:
+            # Checkout repo
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            # Setup Java (for Spring Boot)
+            - name: Setup Java
+              uses: actions/setup-java@v4
+              with:
+                  java-version: 17
+                  distribution: "temurin"
+
+            # Build Auth Service with Maven
+            - name: Build Auth Service
+              working-directory: auth
+              run: mvn clean package -DskipTests
+
+            # Build Order Service with Maven
+            - name: Build Order Service
+              working-directory: order
+              run: mvn clean package -DskipTests
+
+            # Build Menu Service with Maven
+            - name: Build Menu Service
+              working-directory: menu
+              run: mvn clean package -DskipTests
+
+            # Build Payment Service with Maven
+            - name: Build Payment Service
+              working-directory: payment
+              run: mvn clean package -DskipTests
+
+            # Build Docker images
+            - name: Build Docker images
+              env:
+                  DOCKER_USER: ${{ secrets.DOCKER_USER }}
+              run: |
+                  docker build --no-cache -t $DOCKER_USER/restaurant-microservice-auth:latest ./auth
+                  docker build --no-cache -t $DOCKER_USER/restaurant-microservice-menu:latest ./menu
+                  docker build --no-cache -t $DOCKER_USER/restaurant-microservice-order:latest ./order
+                  docker build --no-cache -t $DOCKER_USER/restaurant-microservice-payment:latest ./payment
+
+            # Optional: Push to Docker Hub
+            - name: Push Docker images
+              if: github.ref == 'refs/heads/main'
+              env:
+                  DOCKER_USER: ${{ secrets.DOCKER_USER }}
+                  DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+              run: |
+                  echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                  docker push $DOCKER_USER/restaurant-microservice-auth:latest
+                  docker push $DOCKER_USER/restaurant-microservice-menu:latest
+                  docker push $DOCKER_USER/restaurant-microservice-order:latest
+                  docker push $DOCKER_USER/restaurant-microservice-payment:latest
