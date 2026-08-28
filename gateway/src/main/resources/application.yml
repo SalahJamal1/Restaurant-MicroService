@@ -7,6 +7,10 @@ eureka:
     service-url:
       defaultZone: http://localhost:8888/eureka
 
+gateway:
+  menu-url: http://localhost:8081
+  order-url: http://localhost:8082
+  payment-url: http://localhost:8083
 spring:
   application:
     name: gateway

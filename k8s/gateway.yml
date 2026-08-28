@@ -19,8 +19,17 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: GATEWAY_MENU_URL
+              value: "http://menu-service:8081"
+
+            - name: GATEWAY_ORDER_URL
+              value: "http://order-service:8082"
+
+            - name: GATEWAY_PAYMENT_URL
+              value: "http://payment-service:8083"
+
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: http://discovery-service:8888/eureka/
+              value: "http://discovery-service:8888/eureka/"
 
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql-service:3306/restaurant_user?createDatabaseIfNotExist=true

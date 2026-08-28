@@ -4,6 +4,7 @@ import com.app.gateway.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.server.mvc.filter.BeforeFilterFunctions;
 import org.springframework.cloud.gateway.server.mvc.predicate.GatewayRequestPredicates;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +32,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AppConfig {
     private final UserRepository userRepository;
+    @Value("${gateway.menu-url}")
+    private String menuUrl;
+
+    @Value("${gateway.order-url}")
+    private String orderUrl;
+
+    @Value("${gateway.payment-url}")
+    private String paymentUrl;
     @Bean
     public RouterFunction<ServerResponse> gatewayRouterFunctions() {
 
@@ -39,7 +48,7 @@ public class AppConfig {
                         GatewayRequestPredicates.path("/api/v1/items/**"),
                         http()
                 )
-                .before(BeforeFilterFunctions.uri("lb://menu"))
+                .before(BeforeFilterFunctions.uri(menuUrl))
                 .build()
 
                 .and(route("orders")
@@ -47,7 +56,7 @@ public class AppConfig {
                                 GatewayRequestPredicates.path("/api/v1/orders/**"),
                                 http()
                         )
-                        .before(BeforeFilterFunctions.uri("lb://order"))
+                        .before(BeforeFilterFunctions.uri(orderUrl))
                         .build())
 
                 .and(route("payments")
@@ -55,7 +64,7 @@ public class AppConfig {
                                 GatewayRequestPredicates.path("/api/v1/payments/**"),
                                 http()
                         )
-                        .before(BeforeFilterFunctions.uri("lb://payment"))
+                        .before(BeforeFilterFunctions.uri(paymentUrl))
                         .build());
     }
 
