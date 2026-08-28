@@ -30,7 +30,10 @@ spec:
 
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               value: "http://discovery-service:8888/eureka/"
-
+            - name: EUREKA_INSTANCE_HOSTNAME
+              value: gateway-service
+            - name: EUREKA_INSTANCE_PREFER_IP_ADDRESS
+              value: "false"
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql-service:3306/restaurant_user?createDatabaseIfNotExist=true
             - name: SPRING_DATASOURCE_USERNAME
