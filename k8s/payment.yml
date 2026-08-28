@@ -17,14 +17,20 @@ spec:
         - name: payment
           image: salah529/restaurant-microservice-payment:latest
           ports:
-            - containerPort: 8084
+            - containerPort: 8083
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://mysql-service:3306/restaurant_payment
+              value: jdbc:mysql://mysql-service:3306/payment_db?createDatabaseIfNotExist=true
             - name: SPRING_DATASOURCE_USERNAME
-              value: root
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: SPRING_DATASOURCE_USERNAME
             - name: SPRING_DATASOURCE_PASSWORD
-              value: "2025"
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: SPRING_DATASOURCE_PASSWORD
 ---
 apiVersion: v1
 kind: Service
@@ -32,9 +38,9 @@ metadata:
   name: payment-service
   namespace: restaurant-microservice
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: payment
   ports:
-    - port: 8084
-      targetPort: 8084
+    - port: 8083
+      targetPort: 8083

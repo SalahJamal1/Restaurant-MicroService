@@ -20,9 +20,9 @@ pipeline {
             }
         }
 
-        stage('Auth Service Build') {
+        stage('Gateway Service Build') {
             steps {
-                dir('auth') {
+                dir('gateway') {
                     sh "mvn clean package -DskipTests=true"
                 }
             }
@@ -53,15 +53,12 @@ pipeline {
         }
 
         stage('OWASP Dependency Check') {
-                steps { 
-                    withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_API_KEY')]) {
-                        dependencyCheck additionalArguments: '--nvdApiKey ' + NVD_API_KEY + ' --scan ./ --format XML --format HTML',
-                            odcInstallation: 'DP' 
-                        
-                    } 
-                    
-                }
-            
+            steps { 
+                withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_API_KEY')]) {
+                    dependencyCheck additionalArguments: '--nvdApiKey ' + NVD_API_KEY + ' --scan ./ --format XML --format HTML',
+                        odcInstallation: 'DP' 
+                } 
+            }
         }
 
         stage('SonarQube Analysis') {
@@ -71,7 +68,7 @@ pipeline {
                         $SCANNER_HOME/bin/sonar-scanner \
                         -Dsonar.projectKey=restaurant-microservice \
                         -Dsonar.projectName=restaurant-microservice \
-                        -Dsonar.java.binaries=auth/target/classes,menu/target/classes,order/target/classes,payment/target/classes 
+                        -Dsonar.java.binaries=gateway/target/classes,menu/target/classes,order/target/classes,payment/target/classes 
                     '''
                 }
             }
@@ -80,21 +77,20 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script {
-                            withCredentials([
-                                usernamePassword(credentialsId: '8a0ea94d-bd48-4c46-a69f-6fc0a11e67d1', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
-                            ])
-                            {
-                            sh '''
-                                docker login -u $DOCKER_USER -p $DOCKER_PASS
-                                docker build --no-cache -t salah529/restaurant-microservice-auth:latest ./auth
-                                docker build --no-cache -t salah529/restaurant-microservice-menu:latest ./menu
-                                docker build --no-cache -t salah529/restaurant-microservice-order:latest ./order
-                                docker build --no-cache -t salah529/restaurant-microservice-payment:latest ./payment
-                                docker push salah529/restaurant-microservice-auth:latest
-                                docker push salah529/restaurant-microservice-menu:latest
-                                docker push salah529/restaurant-microservice-order:latest
-                                docker push salah529/restaurant-microservice-payment:latest
-                            '''
+                    withCredentials([
+                        usernamePassword(credentialsId: '8a0ea94d-bd48-4c46-a69f-6fc0a11e67d1', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
+                    ]) {
+                        sh '''
+                            docker login -u $DOCKER_USER -p $DOCKER_PASS
+                            docker build --no-cache -t salah529/restaurant-microservice-gateway:latest ./gateway
+                            docker build --no-cache -t salah529/restaurant-microservice-menu:latest ./menu
+                            docker build --no-cache -t salah529/restaurant-microservice-order:latest ./order
+                            docker build --no-cache -t salah529/restaurant-microservice-payment:latest ./payment
+                            docker push salah529/restaurant-microservice-gateway:latest
+                            docker push salah529/restaurant-microservice-menu:latest
+                            docker push salah529/restaurant-microservice-order:latest
+                            docker push salah529/restaurant-microservice-payment:latest
+                        '''
                     }
                 }
             }
@@ -107,10 +103,8 @@ pipeline {
                         sh '''
                         kubectl apply -f .
                         '''
-                     }
-                    
+                    }
                 }
-                
             }
         }
     }

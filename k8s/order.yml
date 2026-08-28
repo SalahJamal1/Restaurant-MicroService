@@ -17,14 +17,20 @@ spec:
         - name: order
           image: salah529/restaurant-microservice-order:latest
           ports:
-            - containerPort: 8083
+            - containerPort: 8082
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://mysql-service:3306/restaurant_order
+              value: jdbc:mysql://mysql-service:3306/restaurant_order?createDatabaseIfNotExist=true
             - name: SPRING_DATASOURCE_USERNAME
-              value: root
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: SPRING_DATASOURCE_USERNAME
             - name: SPRING_DATASOURCE_PASSWORD
-              value: "2025"
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: SPRING_DATASOURCE_PASSWORD
 ---
 apiVersion: v1
 kind: Service
@@ -32,9 +38,9 @@ metadata:
   name: order-service
   namespace: restaurant-microservice
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: order
   ports:
-    - port: 8083
-      targetPort: 8083
+    - port: 8082
+      targetPort: 8082

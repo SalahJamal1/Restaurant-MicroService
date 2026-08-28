@@ -1,6 +1,15 @@
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8888/eureka
+
 spring:
+  application:
+    name: menu
   datasource:
-    url: jdbc:mysql://localhost:3306/restaurant_menu
+    url: jdbc:mysql://localhost:3306/restaurant_menu?createDatabaseIfNotExist=true
     username: root
     password: 2025
   jpa:
@@ -9,4 +18,4 @@ spring:
     hibernate:
       ddl-auto: update
 server:
-  port: 8082
+  port: 8081

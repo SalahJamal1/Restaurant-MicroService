@@ -8,10 +8,10 @@
         <version>3.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.menu.app</groupId>
-    <artifactId>restaurant-menu</artifactId>
+    <groupId>com.app.order</groupId>
+    <artifactId>order</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>restaurant-menu</name>
+    <name>order</name>
     <description>Microservices Restaurant</description>
     <url/>
     <licenses>
@@ -51,6 +51,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <version>5.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

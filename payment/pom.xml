@@ -8,10 +8,10 @@
         <version>3.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.menu.app</groupId>
-    <artifactId>restaurant-menu</artifactId>
+    <groupId>com.app.payment</groupId>
+    <artifactId>payment</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>restaurant-menu</name>
+    <name>payment</name>
     <description>Microservices Restaurant</description>
     <url/>
     <licenses>
@@ -98,7 +98,10 @@
             <artifactId>mapstruct</artifactId>
             <version>1.5.5.Final</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct-processor</artifactId>
