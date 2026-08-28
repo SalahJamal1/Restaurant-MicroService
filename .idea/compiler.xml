@@ -10,16 +10,7 @@
         <module name="gateway (1) (com.gateway)" />
         <module name="discovery" />
       </profile>
-      <profile name="Annotation profile for gateway" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="gateway (1)" />
-      </profile>
-      <profile name="Annotation profile for payment" enabled="true">
+      <profile name="Annotation profile for discovery" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -34,6 +25,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="gateway (1)" target="21" />
       <module name="gateway (1) (com.app)" target="21" />
       <module name="gateway (1) (com.gateway)" target="21" />
       <module name="restaurant-auth" target="17" />

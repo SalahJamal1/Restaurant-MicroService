@@ -7,7 +7,7 @@ eureka:
 
 spring:
   application:
-    name: order
+    name: orders
   datasource:
     url: jdbc:mysql://localhost:3306/restaurant_order?createDatabaseIfNotExist=true
     username: root

@@ -33,17 +33,29 @@ public class AppConfig {
     private final UserRepository userRepository;
     @Bean
     public RouterFunction<ServerResponse> gatewayRouterFunctions() {
+
         return route("menu")
-                .route(GatewayRequestPredicates.path("/api/v1/items/**"), http())
-                .before(BeforeFilterFunctions.uri("http://localhost:8081"))
+                .route(
+                        GatewayRequestPredicates.path("/api/v1/items/**"),
+                        http()
+                )
+                .before(BeforeFilterFunctions.uri("lb://menu"))
                 .build()
+
                 .and(route("orders")
-                        .route(GatewayRequestPredicates.path("/api/v1/orders/**"), http())
-                        .before(BeforeFilterFunctions.uri("http://localhost:8082"))
+                        .route(
+                                GatewayRequestPredicates.path("/api/v1/orders/**"),
+                                http()
+                        )
+                        .before(BeforeFilterFunctions.uri("lb://order"))
                         .build())
+
                 .and(route("payments")
-                        .route(GatewayRequestPredicates.path("/api/v1/payments/**"), http())
-                        .before(BeforeFilterFunctions.uri("http://localhost:8083"))
+                        .route(
+                                GatewayRequestPredicates.path("/api/v1/payments/**"),
+                                http()
+                        )
+                        .before(BeforeFilterFunctions.uri("lb://payment"))
                         .build());
     }
 
