@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-deployment
+  namespace: restaurant-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discovery
+  template:
+    metadata:
+      labels:
+        app: discovery
+    spec:
+      containers:
+        - name: discovery
+          image: salah529/restaurant-microservice-discovery:latest
+          ports:
+            - containerPort: 8888
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discovery-service
+  namespace: restaurant-microservice
+spec:
+  type: ClusterIP
+  selector:
+    app: discovery
+  ports:
+    - port: 8888
+      targetPort: 8888
