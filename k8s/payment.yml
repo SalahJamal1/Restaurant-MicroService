@@ -14,13 +14,13 @@ spec:
         app: payment
     spec:
       containers:
-        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-          value: http://discovery-service:8888/eureka/
         - name: payment
           image: salah529/restaurant-microservice-payment:latest
           ports:
             - containerPort: 8083
           env:
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://discovery-service:8888/eureka/
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql-service:3306/payment_db?createDatabaseIfNotExist=true
             - name: SPRING_DATASOURCE_USERNAME
