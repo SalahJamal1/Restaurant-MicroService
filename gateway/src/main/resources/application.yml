@@ -8,24 +8,6 @@ eureka:
       defaultZone: http://localhost:8888/eureka
 
 spring:
-  cloud:
-    gateway:
-      routes:
-
-        - id: menu
-          uri: http://localhost:8081
-          predicates:
-            - Path=/api/v1/items/**
-
-        - id: orders
-          uri: http://localhost:8082
-          predicates:
-            - Path=/api/v1/orders/**
-
-        - id: payments
-          uri: http://localhost:8083
-          predicates:
-            - Path=/api/v1/payments/**
   application:
     name: gateway
 

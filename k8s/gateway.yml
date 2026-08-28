@@ -19,6 +19,9 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://discovery-service:8888/eureka/
+
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql-service:3306/restaurant_user?createDatabaseIfNotExist=true
             - name: SPRING_DATASOURCE_USERNAME
@@ -31,6 +34,7 @@ spec:
                 secretKeyRef:
                   name: app-secrets
                   key: SPRING_DATASOURCE_PASSWORD
+
 ---
 apiVersion: v1
 kind: Service
